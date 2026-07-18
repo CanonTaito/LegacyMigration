@@ -1,0 +1,32 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="PropertyList.WebForms.Site" %>
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <title>Property List</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <asp:ContentPlaceHolder ID="head" runat="server" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="Default.aspx">Property List</a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="Default.aspx">Home</a>
+                <a class="nav-link" href="Search.aspx">Search</a>
+                <a class="nav-link" href="Contact.aspx">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <form id="form1" runat="server">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server" />
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
