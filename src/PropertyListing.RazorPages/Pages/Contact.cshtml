@@ -1,0 +1,50 @@
+@page
+@model ContactModel
+@{
+    ViewData["Title"] = "Contact";
+}
+
+<h2>Contact Us</h2>
+<p>Interested in a property? Fill out the form below and we'll get back to you.</p>
+
+@if (Model.ShowSuccess)
+{
+    <div class="alert alert-success">
+        Thanks @Model.Name, we received your message about property @Model.PropertyRef.
+    </div>
+}
+else
+{
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label for="Name" class="form-label">Name *</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="Email" class="form-label">Email *</label>
+            <input asp-for="Email" class="form-control" type="email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="PropertyRef" class="form-label">Property Reference</label>
+            <select asp-for="PropertyRef" asp-items="Model.PropertyRefOptions" class="form-control"></select>
+        </div>
+
+        <div class="mb-3">
+            <label for="Message" class="form-label">Message *</label>
+            <textarea asp-for="Message" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Message" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Send Message</button>
+    </form>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
