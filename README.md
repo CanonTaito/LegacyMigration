@@ -10,7 +10,8 @@ Built to showcase modernisation patterns for legacy .NET applications — a comm
 
 ```
 src/
-  PropertyList.WebForms/    # Legacy ASP.NET WebForms app (.NET Framework 4.7.2)
+  PropertyList.WebForms/       # Legacy ASP.NET WebForms app (.NET Framework 4.7.2)
+  PropertyListing.RazorPages/  # Modern ASP.NET Core Razor Pages (.NET 9)
 ```
 
 ## WebForms Application
@@ -21,26 +22,48 @@ A property listing website with:
 - **Search** — Postback form with keyword and type filtering
 - **Contact** — Form with server-side validators
 
-### Technologies
+## Razor Pages Migration
+
+The same application rebuilt in ASP.NET Core Razor Pages, demonstrating 9 migration patterns:
+
+| Pattern | WebForms | Razor Pages |
+|---|---|---|
+| Master Page → Layout | `Site.Master` | `_Layout.cshtml` |
+| GridView → Foreach | `asp:GridView` | `@foreach` + HTML table |
+| QueryString → Route | `Request.QueryString["id"]` | `@page "{id:int}"` |
+| Server Controls → Tag Helpers | `asp:TextBox` | `<input asp-for="...">` |
+| PostBack → Form Submit | `OnClick` event | `<form method="post">` + `OnPost()` |
+| Validators → Data Annotations | `asp:RequiredFieldValidator` | `[Required]` |
+| ViewState → Model Binding | Automatic via ViewState | `asp-for` tag helpers |
+| Page Lifecycle → Handlers | `Page_Load` | `OnGet()` / `OnPost()` |
+| Response.Redirect → RedirectToPage | `Response.Redirect()` | `RedirectToPage()` |
+
+## Technologies
+
+### WebForms
 - ASP.NET WebForms (.NET Framework 4.7.2)
-- Bootstrap 5.3
+- Bootstrap 5.3 (CDN)
 - IIS Express
 
-## Planned: Razor Pages Migration
-
-- Razor Pages on .NET 8+
-- Tag helpers replacing server controls
-- Dependency injection
-- Model binding replacing ViewState
-- Client-side validation
-- Clean separation of concerns
+### Razor Pages
+- ASP.NET Core Razor Pages (.NET 9)
+- Tag Helpers
+- Model Binding
+- Data Annotations
+- Bootstrap 5.3 (local)
 
 ## Development
 
 ### Prerequisites
-- Visual Studio 2022
-- .NET Framework 4.7.2 targeting pack
-- IIS Express
+- Visual Studio 2022+
+- .NET 9 SDK
+- .NET Framework 4.7.2 targeting pack (for WebForms)
 
 ### Build
-Open `src/PropertyList.WebForms/PropertyList.WebForms.sln` in Visual Studio and build (Ctrl+Shift+B).
+Open `LegacyMigration.slnx` in Visual Studio. Both projects are included.
+
+### Run WebForms
+Set `PropertyList.WebForms` as startup project → Ctrl+Shift+B → F5 (IIS Express)
+
+### Run Razor Pages
+Set `PropertyListing.RazorPages` as startup project → F5 (Kestrel, http://localhost:5160)
