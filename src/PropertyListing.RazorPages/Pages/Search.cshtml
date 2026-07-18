@@ -1,0 +1,55 @@
+@page
+@model SearchModel
+@{
+    ViewData["Title"] = "Search";
+}
+
+<h2>Search Properties</h2>
+
+<form method="post">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="Keyword" class="form-label">Keyword</label>
+            <input asp-for="Keyword" class="form-control" placeholder="e.g. pool, family, views" />
+        </div>
+        <div class="col-md-4">
+            <label for="PropertyType" class="form-label">Property Type</label>
+            <select asp-for="PropertyType" asp-items="Model.PropertyTypeOptions" class="form-control"></select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.HasSearched)
+{
+    if (Model.Results.Count == 0)
+    {
+        <p class="text-muted">No properties match your search.</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Address</th>
+                    <th>Price</th>
+                    <th>Beds</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var property in Model.Results)
+                {
+                    <tr>
+                        <td>@property.Address</td>
+                        <td>@property.Price.ToString("C")</td>
+                        <td>@property.Bedrooms</td>
+                        <td>@property.PropertyType</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
