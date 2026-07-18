@@ -1,0 +1,32 @@
+@page "{id:int}"
+@model PropertyDetailModel
+
+@if (Model.Property is null)
+{
+    <p class="text-muted">Property not found.</p>
+}
+else
+{
+    <h2 class="mb-3">@Model.Property.Address</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Model.Property.ImageUrl" alt="@Model.Property.Address" class="img-fluid rounded" />
+        </div>
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-4">Price</dt>
+                <dd class="col-sm-8">@Model.Property.Price.ToString("C")</dd>
+                <dt class="col-sm-4">Bedrooms</dt>
+                <dd class="col-sm-8">@Model.Property.Bedrooms</dd>
+                <dt class="col-sm-4">Type</dt>
+                <dd class="col-sm-8">@Model.Property.PropertyType</dd>
+            </dl>
+            <p class="text-muted">@Model.Property.Description</p>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a asp-page="/Index" class="btn btn-secondary">Back to List</a>
+    </div>
+}
