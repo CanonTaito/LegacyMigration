@@ -1,10 +1,40 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Available Properties</h2>
+
+@if (Model.Properties.Count == 0)
+{
+    <p class="text-muted">No properties available.</p>
+}
+else
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Address</th>
+                <th>Price</th>
+                <th>Beds</th>
+                <th>Type</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var property in Model.Properties)
+            {
+                <tr>
+                    <td>@property.Address</td>
+                    <td>@property.Price.ToString("C")</td>
+                    <td>@property.Bedrooms</td>
+                    <td>@property.PropertyType</td>
+                    <td>
+                        <a asp-page="/PropertyDetail" asp-route-id="@property.Id" class="btn btn-sm btn-primary">View</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
