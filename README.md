@@ -14,7 +14,7 @@ src/
   PropertyListing.RazorPages/  # Modern ASP.NET Core Razor Pages (.NET 9)
   PropertyListing.Tests/       # xUnit tests (unit + functional equivalence)
 docs/
-  MIGRATION-PATTERNS.md        # 9 documented transformation patterns
+  MIGRATION-PATTERNS.md        # 12 documented transformation patterns
   AI-WORKFLOW.md               # How AI tools were used in the migration
   CASE-STUDY.md                # Interview narrative and lessons learned
   copilot-modernization-output/ # Microsoft Copilot Modernization assessment
@@ -30,7 +30,7 @@ A property listing website with:
 
 ## Razor Pages Migration
 
-The same application rebuilt in ASP.NET Core Razor Pages, demonstrating 9 migration patterns:
+The same application rebuilt in ASP.NET Core Razor Pages, demonstrating 12 migration patterns:
 
 | Pattern | WebForms | Razor Pages |
 |---|---|---|
@@ -81,7 +81,7 @@ dotnet test src/PropertyListing.Tests
 
 ## Documentation
 
-- [Migration Patterns](docs/MIGRATION-PATTERNS.md) — 9 documented transformation patterns with before/after code
+- [Migration Patterns](docs/MIGRATION-PATTERNS.md) — 12 documented transformation patterns with before/after code
 - [AI Workflow](docs/AI-WORKFLOW.md) — How AI tools were used, what worked, what didn't
 - [Case Study](docs/CASE-STUDY.md) — Interview narrative and lessons learned
 - [Copilot Modernization Output](docs/copilot-modernization-output/) — Microsoft's automated assessment
