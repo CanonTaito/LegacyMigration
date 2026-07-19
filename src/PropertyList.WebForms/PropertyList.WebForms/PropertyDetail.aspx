@@ -7,6 +7,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <asp:Label ID="lblAddress" runat="server" CssClass="h3"></asp:Label>
     <br /><br />
+    <asp:Label ID="lblError" runat="server" CssClass="text-danger" Visible="false" />
     <div class="row">
         <div class="col-md-6">
             <img src="" alt="Property" id="imgProperty" runat="server" class="img-fluid rounded" />
