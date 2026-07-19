@@ -12,6 +12,12 @@ Built to showcase modernisation patterns for legacy .NET applications — a comm
 src/
   PropertyList.WebForms/       # Legacy ASP.NET WebForms app (.NET Framework 4.7.2)
   PropertyListing.RazorPages/  # Modern ASP.NET Core Razor Pages (.NET 9)
+  PropertyListing.Tests/       # xUnit tests (unit + functional equivalence)
+docs/
+  MIGRATION-PATTERNS.md        # 9 documented transformation patterns
+  AI-WORKFLOW.md               # How AI tools were used in the migration
+  CASE-STUDY.md                # Interview narrative and lessons learned
+  copilot-modernization-output/ # Microsoft Copilot Modernization assessment
 ```
 
 ## WebForms Application
@@ -67,3 +73,15 @@ Set `PropertyList.WebForms` as startup project → Ctrl+Shift+B → F5 (IIS Expr
 
 ### Run Razor Pages
 Set `PropertyListing.RazorPages` as startup project → F5 (Kestrel, http://localhost:5160)
+
+### Run Tests
+```
+dotnet test src/PropertyListing.Tests
+```
+
+## Documentation
+
+- [Migration Patterns](docs/MIGRATION-PATTERNS.md) — 9 documented transformation patterns with before/after code
+- [AI Workflow](docs/AI-WORKFLOW.md) — How AI tools were used, what worked, what didn't
+- [Case Study](docs/CASE-STUDY.md) — Interview narrative and lessons learned
+- [Copilot Modernization Output](docs/copilot-modernization-output/) — Microsoft's automated assessment
