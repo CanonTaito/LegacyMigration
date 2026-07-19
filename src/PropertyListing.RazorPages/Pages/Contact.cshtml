@@ -18,6 +18,11 @@ else
     <form method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+        @if (!string.IsNullOrEmpty(Model.BusinessValidationErrors))
+        {
+            <div class="alert alert-danger">@Html.Raw(Model.BusinessValidationErrors)</div>
+        }
+
         <div class="mb-3">
             <label for="Name" class="form-label">Name *</label>
             <input asp-for="Name" class="form-control" />

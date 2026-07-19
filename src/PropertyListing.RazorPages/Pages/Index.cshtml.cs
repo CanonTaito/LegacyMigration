@@ -6,10 +6,17 @@ namespace PropertyListing.RazorPages.Pages;
 
 public class IndexModel : PageModel
 {
+    private readonly IPropertyDataService _propertyDataService;
+
+    public IndexModel(IPropertyDataService propertyDataService)
+    {
+        _propertyDataService = propertyDataService;
+    }
+
     public List<Property> Properties { get; set; } = [];
 
     public void OnGet()
     {
-        Properties = PropertyData.GetAll();
+        Properties = _propertyDataService.GetAll();
     }
 }

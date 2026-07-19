@@ -4,10 +4,12 @@ namespace PropertyListing.Tests;
 
 public class PropertyDataTests
 {
+    private readonly IPropertyDataService _service = new PropertyDataService();
+
     [Fact]
     public void GetAll_ReturnsFiveProperties()
     {
-        var properties = PropertyData.GetAll();
+        var properties = _service.GetAll();
 
         Assert.Equal(5, properties.Count);
     }
@@ -15,7 +17,7 @@ public class PropertyDataTests
     [Fact]
     public void GetAll_ReturnsNonEmptyAddresses()
     {
-        var properties = PropertyData.GetAll();
+        var properties = _service.GetAll();
 
         Assert.All(properties, p => Assert.False(string.IsNullOrWhiteSpace(p.Address)));
     }
@@ -23,7 +25,7 @@ public class PropertyDataTests
     [Fact]
     public void GetById_ExistingId_ReturnsProperty()
     {
-        var property = PropertyData.GetById(1);
+        var property = _service.GetById(1);
 
         Assert.NotNull(property);
         Assert.Equal(1, property.Id);
@@ -31,11 +33,9 @@ public class PropertyDataTests
     }
 
     [Fact]
-    public void GetById_NonExistingId_ReturnsNull()
+    public void GetById_NonExistingId_ThrowsArgumentException()
     {
-        var property = PropertyData.GetById(999);
-
-        Assert.Null(property);
+        Assert.Throws<ArgumentException>(() => _service.GetById(999));
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public class PropertyDataTests
     {
         for (int id = 1; id <= 5; id++)
         {
-            var property = PropertyData.GetById(id);
+            var property = _service.GetById(id);
             Assert.NotNull(property);
             Assert.Equal(id, property.Id);
         }
@@ -52,7 +52,7 @@ public class PropertyDataTests
     [Fact]
     public void Search_ByKeyword_FiltersByAddress()
     {
-        var results = PropertyData.Search("Kangaroo", null);
+        var results = _service.Search("Kangaroo", null);
 
         Assert.Single(results);
         Assert.Contains("Kangaroo", results[0].Address);
@@ -61,7 +61,7 @@ public class PropertyDataTests
     [Fact]
     public void Search_ByKeyword_FiltersByDescription()
     {
-        var results = PropertyData.Search("pool", null);
+        var results = _service.Search("pool", null);
 
         Assert.True(results.Count >= 2);
         Assert.All(results, r =>
@@ -73,8 +73,8 @@ public class PropertyDataTests
     [Fact]
     public void Search_ByType_FiltersByPropertyType()
     {
-        var houses = PropertyData.Search(null, "House");
-        var apartments = PropertyData.Search(null, "Apartment");
+        var houses = _service.Search(null, "House");
+        var apartments = _service.Search(null, "Apartment");
 
         Assert.Equal(3, houses.Count);
         Assert.Equal(2, apartments.Count);
@@ -85,7 +85,7 @@ public class PropertyDataTests
     [Fact]
     public void Search_CombinedFilters_ReturnsIntersection()
     {
-        var results = PropertyData.Search("pool", "House");
+        var results = _service.Search("pool", "House");
 
         Assert.True(results.Count >= 1);
         Assert.All(results, r =>
@@ -98,7 +98,7 @@ public class PropertyDataTests
     [Fact]
     public void Search_EmptyKeyword_ReturnsAllProperties()
     {
-        var results = PropertyData.Search("", null);
+        var results = _service.Search("", null);
 
         Assert.Equal(5, results.Count);
     }
@@ -106,7 +106,7 @@ public class PropertyDataTests
     [Fact]
     public void Search_NoMatch_ReturnsEmpty()
     {
-        var results = PropertyData.Search("xyznonexistent", null);
+        var results = _service.Search("xyznonexistent", null);
 
         Assert.Empty(results);
     }
@@ -114,9 +114,9 @@ public class PropertyDataTests
     [Fact]
     public void Search_IsCaseInsensitive()
     {
-        var lower = PropertyData.Search("kangaroo", null);
-        var upper = PropertyData.Search("KANGAROO", null);
-        var mixed = PropertyData.Search("KaNgArOo", null);
+        var lower = _service.Search("kangaroo", null);
+        var upper = _service.Search("KANGAROO", null);
+        var mixed = _service.Search("KaNgArOo", null);
 
         Assert.Single(lower);
         Assert.Single(upper);

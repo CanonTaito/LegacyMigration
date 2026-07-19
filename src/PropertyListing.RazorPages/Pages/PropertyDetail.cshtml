@@ -1,11 +1,15 @@
 @page "{id:int}"
 @model PropertyDetailModel
 
-@if (Model.Property is null)
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
 {
-    <p class="text-muted">Property not found.</p>
+    <div class="alert alert-danger">
+        <p>@Model.ErrorMessage</p>
+        <small>This property may have been removed or you may not have permission to view it.</small>
+    </div>
+    <a asp-page="/Index" class="btn btn-secondary">Back to Property List</a>
 }
-else
+else if (Model.Property is not null)
 {
     <h2 class="mb-3">@Model.Property.Address</h2>
 

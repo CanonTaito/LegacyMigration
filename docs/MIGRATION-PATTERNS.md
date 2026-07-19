@@ -334,6 +334,178 @@ return RedirectToPage("/PropertyDetail", new { id = id });
 
 ---
 
+## Pattern 10: Static Data Class to DI Service
+
+**When to apply:** Any static data access class (e.g., `PropertyData`).
+
+**WebForms:**
+```csharp
+public static class PropertyData
+{
+    private static readonly List<Property> _properties = new List<Property>(...);
+
+    public static List<Property> GetAll() => _properties;
+    public static Property GetById(int id) => _properties.FirstOrDefault(p => p.Id == id);
+    public static List<Property> Search(string keyword, string propertyType) { ... }
+}
+```
+
+**Razor Pages:**
+```csharp
+// Interface
+public interface IPropertyDataService
+{
+    List<Property> GetAll();
+    Property GetById(int id);
+    List<Property> Search(string? keyword, string? propertyType);
+}
+
+// Implementation
+public class PropertyDataService : IPropertyDataService
+{
+    private static readonly List<Property> _properties = [...];
+
+    public List<Property> GetAll() => _properties.ToList();
+    public Property GetById(int id)
+    {
+        var property = _properties.FirstOrDefault(p => p.Id == id);
+        if (property == null)
+            throw new ArgumentException($"Property with ID {id} not found");
+        return property;
+    }
+    public List<Property> Search(string? keyword, string? propertyType) { ... }
+}
+
+// Registration in Program.cs
+builder.Services.AddScoped<IPropertyDataService, PropertyDataService>();
+```
+
+**Gotchas:**
+- WebForms static classes work because the AppDomain lives for the app lifetime
+- Razor Pages uses dependency injection — register services in `Program.cs`
+- Use `AddScoped` for per-request services, `AddSingleton` for shared state
+- The `throw new ArgumentException` pattern replaces null returns for better error handling
+- Razor Pages models receive the service via constructor injection
+
+---
+
+## Pattern 11: Basic Error Handling to Try-Catch
+
+**When to apply:** Any `Response.Redirect` used as error handling.
+
+**WebForms:**
+```csharp
+protected void Page_Load(object sender, EventArgs e)
+{
+    if (!IsPostBack)
+    {
+        string idStr = Request.QueryString["id"];
+        if (int.TryParse(idStr, out int id))
+        {
+            var property = PropertyData.GetById(id);
+            if (property != null)
+            {
+                DisplayPropertyDetails(property);
+                return;
+            }
+        }
+        Response.Redirect("~/Default.aspx");
+    }
+}
+```
+
+**Razor Pages:**
+```csharp
+public class PropertyDetailModel : PageModel
+{
+    private readonly IPropertyDataService _service;
+
+    public PropertyDetailModel(IPropertyDataService service)
+    {
+        _service = service;
+    }
+
+    public Property? Property { get; set; }
+    public string? ErrorMessage { get; set; }
+
+    public IActionResult OnGet(int id)
+    {
+        if (id <= 0)
+        {
+            ErrorMessage = "Invalid property ID.";
+            return Page();
+        }
+
+        try
+        {
+            Property = _service.GetById(id);
+        }
+        catch (ArgumentException)
+        {
+            ErrorMessage = "Property not found.";
+        }
+
+        return Page();
+    }
+}
+```
+
+**Gotchas:**
+- WebForms uses `Response.Redirect` for error handling — poor UX, no context
+- Razor Pages uses try-catch with an `ErrorMessage` property for inline display
+- The `catch (ArgumentException)` pattern matches the service layer exceptions
+- Return `Page()` with an error message instead of redirecting
+- The .cshtml checks `@if (!string.IsNullOrEmpty(Model.ErrorMessage))` to show errors
+
+---
+
+## Pattern 12: Page.IsValid to Business Validation
+
+**When to apply:** Any form that uses `Page.IsValid` or `asp:Validator` controls.
+
+**WebForms:**
+```csharp
+protected void btnSubmit_Click(object sender, EventArgs e)
+{
+    if (Page.IsValid)
+    {
+        ProcessForm();
+    }
+}
+```
+
+**Razor Pages:**
+```csharp
+public IActionResult OnPost()
+{
+    // Business validation (custom rules)
+    var businessErrors = PerformBusinessValidation();
+    if (!string.IsNullOrEmpty(businessErrors))
+    {
+        BusinessValidationErrors = businessErrors;
+        return Page();
+    }
+
+    // Data annotation validation
+    if (!ModelState.IsValid)
+    {
+        return Page();
+    }
+
+    ProcessForm();
+    return Page();
+}
+```
+
+**Gotchas:**
+- `Page.IsValid` checks `asp:Validator` controls — Razor Pages uses `ModelState.IsValid`
+- Business validation (e.g., "name must be at least 2 characters") is separate from data annotations
+- Run business validation first, then `ModelState.IsValid` for data annotations
+- Use `Html.Raw()` to render business validation errors with HTML line breaks
+- Data annotations (`[Required]`, `[EmailAddress]`) provide client-side validation automatically
+
+---
+
 ## Summary Table
 
 | Pattern | WebForms | Razor Pages | Effort |
@@ -347,5 +519,8 @@ return RedirectToPage("/PropertyDetail", new { id = id });
 | ViewState to Model Binding | Automatic | [BindProperty] | Medium |
 | Page Lifecycle to Handlers | Page_Load | OnGet/OnPost | Medium |
 | Redirect to RedirectToPage | Response.Redirect | RedirectToPage() | Low |
+| Static Data Class to DI Service | Static PropertyData | IPropertyDataService | Medium |
+| Basic Error Handling to Try-Catch | Response.Redirect on error | try-catch + ErrorMessage property | Low |
+| Page.IsValid to Business Validation | Page.IsValid + validators | Custom validation methods + ModelState | Medium |
 
-**Total estimated effort for this app:** 4-6 hours for a developer familiar with both frameworks.
+**Total estimated effort for this app:** 6-8 hours for a developer familiar with both frameworks.

@@ -22,6 +22,16 @@
     </div>
 </form>
 
+@if (!string.IsNullOrEmpty(Model.ValidationMessage))
+{
+    <div class="alert alert-danger">@Model.ValidationMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(Model.SearchTips))
+{
+    <div class="alert alert-info">@Model.SearchTips</div>
+}
+
 @if (Model.HasSearched)
 {
     if (Model.Results.Count == 0)

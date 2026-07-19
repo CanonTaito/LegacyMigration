@@ -7,15 +7,31 @@ namespace PropertyListing.RazorPages.Pages;
 
 public class PropertyDetailModel : PageModel
 {
+    private readonly IPropertyDataService _propertyDataService;
+
+    public PropertyDetailModel(IPropertyDataService propertyDataService)
+    {
+        _propertyDataService = propertyDataService;
+    }
+
     public Property? Property { get; set; }
+    public string? ErrorMessage { get; set; }
 
     public IActionResult OnGet(int id)
     {
-        Property = PropertyData.GetById(id);
-
-        if (Property is null)
+        if (id <= 0)
         {
-            return RedirectToPage("/Index");
+            ErrorMessage = "Invalid property ID. Please select a valid property from the list.";
+            return Page();
+        }
+
+        try
+        {
+            Property = _propertyDataService.GetById(id);
+        }
+        catch (ArgumentException)
+        {
+            ErrorMessage = $"Property with ID {id} was not found. It may have been removed or you may not have permission to view it.";
         }
 
         return Page();

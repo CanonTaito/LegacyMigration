@@ -1,7 +1,10 @@
+using PropertyListing.RazorPages.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<IPropertyDataService, PropertyDataService>();
 
 var app = builder.Build();
 

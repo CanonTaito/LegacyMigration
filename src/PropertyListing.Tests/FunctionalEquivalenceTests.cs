@@ -11,6 +11,8 @@ namespace PropertyListing.Tests;
 /// </summary>
 public class FunctionalEquivalenceTests
 {
+    private readonly IPropertyDataService _service = new PropertyDataService();
+
     /// <summary>
     /// Both WebForms and Razor Pages call PropertyData.GetAll().
     /// Verify the contract: returns exactly 5 properties with correct IDs.
@@ -18,21 +20,13 @@ public class FunctionalEquivalenceTests
     [Fact]
     public void GetAll_Contract_ReturnsSamePropertiesRegardlessOfConsumer()
     {
-        // Simulate WebForms consumption
-        var webFormsProperties = PropertyData.GetAll();
+        var properties = _service.GetAll();
 
-        // Simulate Razor Pages consumption
-        var razorPagesProperties = PropertyData.GetAll();
+        Assert.Equal(5, properties.Count);
 
-        Assert.Equal(webFormsProperties.Count, razorPagesProperties.Count);
-
-        for (int i = 0; i < webFormsProperties.Count; i++)
+        for (int i = 0; i < properties.Count; i++)
         {
-            Assert.Equal(webFormsProperties[i].Id, razorPagesProperties[i].Id);
-            Assert.Equal(webFormsProperties[i].Address, razorPagesProperties[i].Address);
-            Assert.Equal(webFormsProperties[i].Price, razorPagesProperties[i].Price);
-            Assert.Equal(webFormsProperties[i].Bedrooms, razorPagesProperties[i].Bedrooms);
-            Assert.Equal(webFormsProperties[i].PropertyType, razorPagesProperties[i].PropertyType);
+            Assert.Equal(i + 1, properties[i].Id);
         }
     }
 
@@ -48,19 +42,16 @@ public class FunctionalEquivalenceTests
     [InlineData(5)]
     public void GetById_Contract_ReturnsSameDataForAllIds(int id)
     {
-        var webFormsResult = PropertyData.GetById(id);
-        var razorResult = PropertyData.GetById(id);
+        var result = _service.GetById(id);
 
-        Assert.NotNull(webFormsResult);
-        Assert.NotNull(razorResult);
-
-        Assert.Equal(webFormsResult.Id, razorResult.Id);
-        Assert.Equal(webFormsResult.Address, razorResult.Address);
-        Assert.Equal(webFormsResult.Price, razorResult.Price);
-        Assert.Equal(webFormsResult.Bedrooms, razorResult.Bedrooms);
-        Assert.Equal(webFormsResult.Description, razorResult.Description);
-        Assert.Equal(webFormsResult.PropertyType, razorResult.PropertyType);
-        Assert.Equal(webFormsResult.ImageUrl, razorResult.ImageUrl);
+        Assert.NotNull(result);
+        Assert.Equal(id, result.Id);
+        Assert.False(string.IsNullOrWhiteSpace(result.Address));
+        Assert.True(result.Price > 0);
+        Assert.True(result.Bedrooms > 0);
+        Assert.False(string.IsNullOrWhiteSpace(result.Description));
+        Assert.False(string.IsNullOrWhiteSpace(result.PropertyType));
+        Assert.False(string.IsNullOrWhiteSpace(result.ImageUrl));
     }
 
     /// <summary>
@@ -75,23 +66,18 @@ public class FunctionalEquivalenceTests
     [InlineData("family", null)]
     public void Search_Contract_ProducesIdenticalResults(string? keyword, string? propertyType)
     {
-        var webFormsResults = PropertyData.Search(keyword, propertyType);
-        var razorResults = PropertyData.Search(keyword, propertyType);
+        var results = _service.Search(keyword, propertyType);
 
-        Assert.Equal(webFormsResults.Count, razorResults.Count);
-
-        for (int i = 0; i < webFormsResults.Count; i++)
+        Assert.All(results, r =>
         {
-            Assert.Equal(webFormsResults[i].Id, razorResults[i].Id);
-            Assert.Equal(webFormsResults[i].Address, razorResults[i].Address);
-            Assert.Equal(webFormsResults[i].Price, razorResults[i].Price);
-        }
+            Assert.True(r.Id > 0);
+            Assert.False(string.IsNullOrWhiteSpace(r.Address));
+            Assert.True(r.Price > 0);
+        });
     }
 
     /// <summary>
-    /// WebForms uses .NET Framework 4.7.2 string.Contains (case-sensitive).
-    /// Razor Pages uses .NET 9 string.Contains (case-sensitive).
-    /// Verify case-insensitive search works in both by using IndexOf pattern.
+    /// Verify case-insensitive search works using IndexOf pattern.
     /// This test validates the migration fix we applied.
     /// </summary>
     [Theory]
@@ -101,10 +87,9 @@ public class FunctionalEquivalenceTests
     [InlineData("FAMILY")]
     public void Search_CaseInsensitive_ProducesIdenticalResults(string keyword)
     {
-        var webFormsResults = PropertyData.Search(keyword, null);
-        var razorResults = PropertyData.Search(keyword, null);
+        var results = _service.Search(keyword, null);
 
-        Assert.Equal(webFormsResults.Count, razorResults.Count);
+        Assert.True(results.Count >= 1);
     }
 
     /// <summary>
@@ -118,7 +103,7 @@ public class FunctionalEquivalenceTests
     [Fact]
     public void PropertyData_Invariants_AllPropertiesMeetConstraints()
     {
-        var properties = PropertyData.GetAll();
+        var properties = _service.GetAll();
 
         Assert.Equal(5, properties.Count);
         Assert.Equal(3, properties.Count(p => p.PropertyType == "House"));
