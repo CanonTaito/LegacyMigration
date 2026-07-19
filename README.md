@@ -43,6 +43,9 @@ The same application rebuilt in ASP.NET Core Razor Pages, demonstrating 12 migra
 | ViewState → Model Binding | Automatic via ViewState | `asp-for` tag helpers |
 | Page Lifecycle → Handlers | `Page_Load` | `OnGet()` / `OnPost()` |
 | Response.Redirect → RedirectToPage | `Response.Redirect()` | `RedirectToPage()` |
+| Static Data Class → DI Service | Static `PropertyData` | `IPropertyDataService` + DI |
+| Error Handling → Try-Catch | `Response.Redirect` on error | try-catch + `ErrorMessage` property |
+| Page.IsValid → Business Validation | `Page.IsValid` | Custom validation + `ModelState` |
 
 ## Technologies
 

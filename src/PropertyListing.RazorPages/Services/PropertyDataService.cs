@@ -68,7 +68,7 @@ public class PropertyDataService : IPropertyDataService
         return property;
     }
 
-    public Property GetProperty(int id, bool includeDeleted = false)
+    public Property? GetProperty(int id, bool includeDeleted = false)
     {
         var property = _properties.FirstOrDefault(p => p.Id == id);
 

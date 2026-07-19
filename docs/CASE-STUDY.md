@@ -71,6 +71,9 @@ Migrated one pattern at a time:
 | Forms | PostBack + OnClick | method="post" + OnPost() | [BindProperty] replaces ViewState |
 | Validation | asp:Validator | [Required] | Data annotations are cleaner and testable |
 | Navigation | Response.Redirect | RedirectToPage() | Strongly-typed page navigation |
+| Service Layer | Static PropertyData | IPropertyDataService + DI | Interface-based architecture for testability |
+| Error Handling | Response.Redirect on error | try-catch + ErrorMessage | Structured error messages replace blind redirects |
+| Business Validation | Page.IsValid | Custom validation + ModelState | Separate business rules from data annotations |
 
 ### Phase 3: Validation (Prove)
 Created 28 tests across two categories:
@@ -91,12 +94,15 @@ Event handlers: 4 (Page_Load, RowCommand, Click events)
 
 ### After (Razor Pages)
 ```
-Lines of code: ~180 (cshtml + cs)
+Lines of code: ~350 (cshtml + cs, including service layer and validation)
 Framework: .NET 9
 Dependencies: None (Kestrel self-hosted)
 ViewState: None (model binding)
 Tag helpers: 8 (asp-for, asp-items, asp-route-id, asp-page)
-Handler methods: 4 (OnGet, OnPost)
+Handler methods: 6 (OnGet, OnPost for Search/Contact, OnGet for PropertyDetail)
+Service layer: IPropertyDataService with DI registration
+Error handling: Try-catch with inline error display
+Business validation: Custom validation methods per form
 ```
 
 ### Metrics
@@ -107,6 +113,9 @@ Handler methods: 4 (OnGet, OnPost)
 | Postback round-trips | 1 per action | 0 | -100% |
 | Server controls | 15+ | 0 (pure HTML) | -100% |
 | Test coverage | 0% | 100% (28 tests) | +100% |
+| Service layer | Static class | Interface + DI | Enterprise-ready |
+| Error handling | Redirect on error | Try-catch + inline | User-friendly |
+| Validation | Page.IsValid | Business rules + ModelState | Comprehensive |
 | Framework support | End of life | Active | Supported |
 
 ## Lessons Learned

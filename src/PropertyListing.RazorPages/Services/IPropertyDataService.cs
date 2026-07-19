@@ -6,7 +6,7 @@ public interface IPropertyDataService
 {
     List<Property> GetAll();
     Property GetById(int id);
-    Property GetProperty(int id, bool includeDeleted = false);
+    Property? GetProperty(int id, bool includeDeleted = false);
     List<Property> Search(string? keyword, string? propertyType);
     void AddProperty(Property property);
     void UpdateProperty(Property property);
