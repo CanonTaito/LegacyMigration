@@ -24,6 +24,9 @@
         </div>
     </div>
 
+    <asp:Label ID="lblError" runat="server" CssClass="text-danger" Visible="false" />
+    <asp:Label ID="lblTips" runat="server" CssClass="text-info" Visible="false" />
+
     <asp:GridView ID="SearchResults" runat="server" AutoGenerateColumns="False"
         CssClass="table table-striped" EmptyDataText="No properties match your search.">
         <Columns>

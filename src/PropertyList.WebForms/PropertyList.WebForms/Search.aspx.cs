@@ -27,7 +27,8 @@ namespace PropertyList.WebForms
             // Execute search with error handling
             try
             {
-                var results = PropertyData.Search(keyword, propertyType);
+                var service = new PropertyDataService();
+                var results = service.Search(keyword, propertyType);
                 DisplaySearchResults(results);
                 DisplaySearchTips();
             }
@@ -54,11 +55,6 @@ namespace PropertyList.WebForms
             else if (!IsValidSearchTerm(txtKeyword.Text))
             {
                 errors.Add("Invalid search term. Please use letters, numbers, and spaces only.");
-            }
-            
-            if (string.IsNullOrEmpty(ddlType.SelectedValue) || ddlType.SelectedValue == "")
-            {
-                errors.Add("Please select a property type or leave it empty to view all types.");
             }
             
             return string.Join("<br/>", errors);
@@ -103,7 +99,7 @@ namespace PropertyList.WebForms
         
         private void DisplaySearchTips()
         {
-            if (SearchResults.Items.Count > 0)
+                if (SearchResults.Rows.Count > 0)
             {
                 lblTips.Text = "Search tips: Use keywords from property descriptions (e.g., 'pool', 'garden', 'city views')";
                 lblTips.Visible = true;

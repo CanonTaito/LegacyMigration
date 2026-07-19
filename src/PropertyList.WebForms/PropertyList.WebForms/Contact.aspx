@@ -9,6 +9,7 @@
     <p>Interested in a property? Fill out the form below and we'll get back to you.</p>
 
     <asp:Label ID="lblSuccess" runat="server" CssClass="alert alert-success d-none" />
+    <asp:Label ID="lblError" runat="server" CssClass="text-danger" Visible="false" />
 
     <asp:Panel ID="pnlForm" runat="server">
         <div class="mb-3">

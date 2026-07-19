@@ -18,7 +18,8 @@ namespace PropertyList.WebForms
                         return;
                     }
                     
-                    var property = PropertyData.GetById(id);
+                    var service = new PropertyDataService();
+                    var property = service.GetById(id);
                     if (property != null)
                     {
                         DisplayPropertyDetails(property);

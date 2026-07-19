@@ -15,7 +15,8 @@ namespace PropertyList.WebForms
 
         private void BindGrid()
         {
-            PropertyGrid.DataSource = PropertyData.GetAll();
+            var service = new PropertyDataService();
+            PropertyGrid.DataSource = service.GetAll();
             PropertyGrid.DataBind();
         }
 

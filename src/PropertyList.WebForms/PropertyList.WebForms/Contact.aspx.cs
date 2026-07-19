@@ -157,7 +157,8 @@ namespace PropertyList.WebForms
         
         private void DisplayBusinessValidationErrors(List<string> errors)
         {
-            String.Join("<br/>", errors);
+            lblError.Text = String.Join("<br/>", errors);
+            lblError.Visible = true;
         }
         
         private void ShowErrorMessage(string message)
