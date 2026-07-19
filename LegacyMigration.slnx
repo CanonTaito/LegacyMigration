@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PropertyListing.RazorPages/PropertyListing.RazorPages.csproj" />
+    <Project Path="src/PropertyList.WebForms/PropertyList.WebForms/PropertyList.WebForms.csproj" Id="27d4df4f-4d0e-43f4-bba9-be449e4d0d67" />
+    <Project Path="src/PropertyListing.Tests/PropertyListing.Tests.csproj" />
+  </Folder>
+</Solution>
